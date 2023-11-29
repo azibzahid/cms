@@ -141,7 +141,7 @@ export default function AddFaculty() {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Add Department
+            Add Faculty
           </Typography>
           <IconButton color="inherit" onClick = {() => { Logout() }}>
             <ExitToAppIcon />

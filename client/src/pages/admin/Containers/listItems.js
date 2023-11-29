@@ -21,7 +21,7 @@ export const mainListItems = (
       <ListItemIcon>
         <SchoolIcon />
       </ListItemIcon>
-      <ListItemText primary="Departments" />
+      <ListItemText primary="Faculties" />
     </ListItem>
     <ListItem button component={Link} to="/admin/faculty_members">
       <ListItemIcon>
@@ -45,7 +45,7 @@ export const secondaryListItems = (
       <ListItemIcon>
         <AddCircleIcon />
       </ListItemIcon>
-      <ListItemText primary="Add Department" />
+      <ListItemText primary="Add Faculty" />
     </ListItem>
     <ListItem button component={Link} to="/admin/add_faculty_member">
       <ListItemIcon>
