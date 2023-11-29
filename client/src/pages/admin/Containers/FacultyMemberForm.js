@@ -14,6 +14,47 @@ import MomentUtils from '@date-io/moment';
 
 const authToken = localStorage.getItem('x-auth-token');
 var faculties = [];
+var designations = [{
+  id: 1,
+  title: "Professor"
+},
+{
+  id: 2,
+  title: "Associate Professor"
+},
+{
+  id: 3,
+  title: "Assitant Professor"
+},
+{
+  id: 4,
+  title: "Lecturer"
+},
+{
+  id: 5,
+  title: "Research Assistant"
+},
+{
+  id: 6,
+  title: "Dean"
+},
+{
+  id: 7,
+  title: "Chairperson"
+},
+{
+  id: 8,
+  title: "Adjacent Faculty"
+},
+{
+  id: 9,
+  title: "Visiting Scholar"
+},
+{
+  id: 10,
+  title: "Postdoctoral Fellow"
+}
+]
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -48,6 +89,7 @@ export default function FacultyMemberForm() {
 
   const currentDate = new Date();
   const [name, setName] = useState("");
+  const [lname, setLname] = useState("");
   const [faculty_name, setFacultyName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -64,6 +106,7 @@ export default function FacultyMemberForm() {
     setSuccessMessage(null);
     Axios.post('http://localhost:4000/api/faculty-member', {
       name: name,
+      lanme: lname,
       faculty_name: faculty_name,
       phone: phone,
       email: email,
@@ -129,8 +172,7 @@ export default function FacultyMemberForm() {
                       fullWidth
                       name="faculty_name"
                       id="faculty_name"
-                      variant="outlined"
-                      label="Faculty"
+                      label="Department"
                       onChange={(e) => {
                         setFacultyName(e.target.value);
                       }}
@@ -145,11 +187,24 @@ export default function FacultyMemberForm() {
                       required
                       fullWidth
                       id="name"
-                      label="Name"
+                      label="First Name"
                       name="name"
                       autoComplete="name"
                       onChange={(e) => {
                         setName(e.target.value);
+                      }}
+                    />
+                    <TextField
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      fullWidth
+                      id="lname"
+                      label="Last Name"
+                      name="lname"
+                      autoComplete="lname"
+                      onChange={(e) => {
+                        setLname(e.target.value);
                       }}
                     />
                     <TextField
@@ -203,7 +258,25 @@ export default function FacultyMemberForm() {
                         setAddress(e.target.value);
                       }}
                     />
+                    {/* <TextField
+                      classes={{ root: classes.root }}
+                      select
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      name="faculty_name"
+                      id="faculty_name"
+                      label="Department"
+                      onChange={(e) => {
+                        setFacultyName(e.target.value);
+                      }}
+                    >
+                      {faculties.map((faculty, index) => (
+                        <MenuItem value={faculty.name}>{faculty.name}</MenuItem>
+                      ))}
+                    </TextField> */}
                     <TextField
+                      select
                       variant="outlined"
                       margin="normal"
                       required
@@ -215,7 +288,11 @@ export default function FacultyMemberForm() {
                       onChange={(e) => {
                         setDesignation(e.target.value);
                       }}
-                    />
+                      >
+                      {designations.map((designation, index) => (
+                        <MenuItem value={designation.title}>{designation.title}</MenuItem>
+                      ))}
+                    </TextField>
                     <KeyboardDatePicker
                       margin="normal"
                       id="date-picker-dialog"
@@ -243,7 +320,7 @@ export default function FacultyMemberForm() {
                     {errorMessage &&
                       <Box mt={5}>
                         <Alert severity="error">
-                          <AlertTitle>Error</AlertTitle>{errorMessage}</Alert>
+                          <AlertTitle>Error</AlertTitle>{"Email already exist. Please enter unique email address"}</Alert>
                       </Box>
                     }
                     {successMessage &&
