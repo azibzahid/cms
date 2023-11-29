@@ -241,12 +241,12 @@ export default function FacultyList() {
   return (
     <React.Fragment>
       <Paper className={classes.paper} elevation={6}>
-        <Typography component="h2" variant="h6" color="primary" gutterBottom>Faculties</Typography>
+        <Typography component="h2" variant="h6" color="primary" gutterBottom>Departments</Typography>
         <Table size="small">
           <TableHead>
             <TableRow>
               <StyledTableCell align="center">S#</StyledTableCell>
-              <StyledTableCell align="center">Faculty</StyledTableCell>
+              <StyledTableCell align="center">Department</StyledTableCell>
               <StyledTableCell align="center">Dean</StyledTableCell>
               <StyledTableCell align="center">Location</StyledTableCell>
               <StyledTableCell align="center">Contact Email</StyledTableCell>

@@ -89,7 +89,7 @@ export default function FacultyForm() {
   return (
     <React.Fragment>
       <Paper className={classes.paper} elevation={6}>
-        <Typography component="h2" variant="h6" color="primary" gutterBottom>Add Faculty</Typography>
+        <Typography component="h2" variant="h6" color="primary" gutterBottom>Add Department</Typography>
         <Grid container>
           <Grid item xs={2} sm={2} md={2}></Grid>
           <Grid item xs={8} sm={8} md={8} container direction="column" alignItems="center" justify="center" square>
@@ -171,7 +171,7 @@ export default function FacultyForm() {
                   className={classes.submit}
                   onClick={addFaculty}
                 >
-                  Add Faculty
+                  Add Department
                 </Button>
                 {errorMessage &&
                   <Box mt={5}>
