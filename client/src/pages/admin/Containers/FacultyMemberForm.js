@@ -11,9 +11,15 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
+
 
 const authToken = localStorage.getItem('x-auth-token');
 var faculties = [];
+var designations = [];
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -47,13 +53,15 @@ export default function FacultyMemberForm() {
   const [loading, setLoading] = useState(true);
 
   const currentDate = new Date();
-  const [name, setName] = useState("");
-  const [faculty_name, setFacultyName] = useState("");
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [faculty_id, setFacultyId] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [gender, setGender] = useState("");
   const [dob, setDob] = useState(currentDate);
   const [password, setPassword] = useState("");
-  const [designation, setDesignation] = useState("");
+  const [desig_id, setDesignation] = useState("");
   const [address, setAddress] = useState("");
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -63,14 +71,16 @@ export default function FacultyMemberForm() {
     setErrorMessage(null);
     setSuccessMessage(null);
     Axios.post('http://localhost:4000/api/faculty-member', {
-      name: name,
-      faculty_name: faculty_name,
+      fname: fname,
+      lname: lname,
+      faculty_id: faculty_id,
       phone: phone,
       email: email,
       password: password,
       dob: dob,
       address: address,
-      designation: designation
+      desg_id: desig_id,
+      gender: gender
     }, {
       headers: {
         'x-auth-token': authToken
@@ -107,7 +117,26 @@ export default function FacultyMemberForm() {
     });
   }
 
-  if (loading) retrieveFaculties();
+  const retrieveDesignations = () => {
+    designations = [];
+  
+    Axios.get(`http://localhost:4000/api/designation`, {})
+    .then((response) => {
+      if(response.status == 200) {
+        designations = response.data.data;
+            
+        setLoading(false);
+        console.log(designations);
+      }
+    }).catch((e) => {
+      console.log(e);
+    });
+  }
+
+  if (loading) {
+    retrieveFaculties();
+    retrieveDesignations();
+  }
 
   return (
     <React.Fragment>
@@ -127,16 +156,15 @@ export default function FacultyMemberForm() {
                       variant="outlined"
                       margin="normal"
                       fullWidth
-                      name="faculty_name"
-                      id="faculty_name"
-                      variant="outlined"
-                      label="Faculty"
+                      name="faculty_id"
+                      id="faculty_id"
+                      label="Department"
                       onChange={(e) => {
-                        setFacultyName(e.target.value);
+                        setFacultyId(e.target.value);
                       }}
                     >
                       {faculties.map((faculty, index) => (
-                        <MenuItem value={faculty.name}>{faculty.name}</MenuItem>
+                        <MenuItem value={faculty.id}>{faculty.name}</MenuItem>
                       ))}
                     </TextField>
                     <TextField
@@ -144,12 +172,25 @@ export default function FacultyMemberForm() {
                       margin="normal"
                       required
                       fullWidth
-                      id="name"
-                      label="Name"
-                      name="name"
-                      autoComplete="name"
+                      id="fname"
+                      label="First Name"
+                      name="fname"
+                      autoComplete="fname"
                       onChange={(e) => {
-                        setName(e.target.value);
+                        setFname(e.target.value);
+                      }}
+                    />
+                    <TextField
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      fullWidth
+                      id="lname"
+                      label="Last Name"
+                      name="lname"
+                      autoComplete="lname"
+                      onChange={(e) => {
+                        setLname(e.target.value);
                       }}
                     />
                     <TextField
@@ -204,6 +245,7 @@ export default function FacultyMemberForm() {
                       }}
                     />
                     <TextField
+                      select
                       variant="outlined"
                       margin="normal"
                       required
@@ -215,7 +257,26 @@ export default function FacultyMemberForm() {
                       onChange={(e) => {
                         setDesignation(e.target.value);
                       }}
-                    />
+                      >
+                      {designations.map((designation, index) => (
+                        <MenuItem value={designation.id}>{designation.title}</MenuItem>
+                      ))}
+                    </TextField>
+                    <div>
+                        <FormLabel>Gender</FormLabel>
+                        <RadioGroup 
+                            row
+                            aria-label="gender" 
+                            name="gender1"
+                            onChange={(e) => {
+                            setGender(e.target.value);
+                            }}
+                            >
+                            <FormControlLabel value="F" control={<Radio color="primary"/>} label="Female" />
+                            <FormControlLabel value="M" control={<Radio color="primary"/>} label="Male" />
+                            <FormControlLabel value="O" control={<Radio color="primary"/>} label="Other" />
+                        </RadioGroup>
+                    </div>
                     <KeyboardDatePicker
                       margin="normal"
                       id="date-picker-dialog"
@@ -243,7 +304,7 @@ export default function FacultyMemberForm() {
                     {errorMessage &&
                       <Box mt={5}>
                         <Alert severity="error">
-                          <AlertTitle>Error</AlertTitle>{errorMessage}</Alert>
+                          <AlertTitle>Error</AlertTitle>{"Email already exist. Please enter unique email address"}</Alert>
                       </Box>
                     }
                     {successMessage &&

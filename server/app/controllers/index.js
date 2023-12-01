@@ -6,6 +6,7 @@ const Enrollment = require("./enrollement");
 const Section = require("./section");
 const Result = require("./result");
 const Attendance = require("./attendance");
+const Designation = require("./designation");
 const Admin = require("./admin");
 
 module.exports = {
@@ -17,5 +18,6 @@ module.exports = {
     Section,
     Result,
     Attendance,
+    Designation,
     Admin
 }

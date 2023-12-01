@@ -20,11 +20,18 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       primaryKey: true
     },
-    name: {
+    fname: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lname: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     phone: {
+      type: DataTypes.STRING
+    },
+    gender: {
       type: DataTypes.STRING
     },
     email: {
@@ -53,15 +60,15 @@ module.exports = (sequelize, DataTypes) => {
     address: {
       type: DataTypes.STRING
     },
-    faculty_name: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
     gender: {
       type: DataTypes.STRING
     },
     cgpa: {
       type: DataTypes.FLOAT
+    },
+    faculty_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   }, {
     sequelize,
@@ -70,7 +77,7 @@ module.exports = (sequelize, DataTypes) => {
   Student.associate = (models) => {
     // define association here
     Student.belongsTo(models.Faculty, {
-      foreignKey: 'faculty_name',
+      foreignKey: 'faculty_id',
       as: 'students'
     });
     Student.hasMany(models.Attendance, {

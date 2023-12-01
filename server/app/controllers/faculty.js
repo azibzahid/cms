@@ -121,7 +121,7 @@ const destroy = (req, res) => {
     const id = req.params.id;
     Faculty.findOne({
         where: {
-            name: id
+            id
         }
     })
     .then(faculty => {  
@@ -164,6 +164,10 @@ const retrieveFacultyMembers = (req,res) => {
             as: "faculty_members"
         }]
     })
+    // db.sequelize.query('select `f`.`id`, `f`.`fname`, `f`.`lname`, `f`.`desg_id`, `f`.`email`, `f`.`phone`, `f`.`address`, `f`.`dob`, `d`.`title` from Faculty_Members f inner join Designations d on f.desg_id = d.id', {
+    //     type: db.sequelize.QueryTypes.SELECT,
+    //     nest: true
+    // })
     .then(facultyMembers => {
         if(!facultyMembers) {
             res.status(statusCodes.NOT_FOUND).json({
@@ -230,10 +234,10 @@ const retrieveFacultyStudents = (req,res) => {
 }
 
 const retrieveFacultyDean = (req,res) => {
-    const name = req.params.facultyId;  
+    const facultyId = req.params.facultyId;  
     
-    db.sequelize.query('SELECT `Faculty`.`name`, `Faculty`.`location`, `Faculty`.`dean_id`, `Faculty`.`contact_phone`, `Faculty`.`contact_email`, `Faculty`.`createdAt`, `Faculty`.`updatedAt`, `dean`.`id` AS `dean.id`, `dean`.`faculty_name` AS `dean.faculty_name`, `dean`.`name` AS `dean.name`, `dean`.`phone` AS `dean.phone`, `dean`.`email` AS `dean.email`, `dean`.`password` AS `dean.password`, `dean`.`dob` AS `dean.dob`, `dean`.`address` AS `dean.address`, `dean`.`designation` AS `dean.designation`, `dean`.`createdAt` AS `dean.createdAt`, `dean`.`updatedAt` AS `dean.updatedAt` FROM `Faculties` AS `Faculty` LEFT OUTER JOIN `Faculty_Members` AS `dean` ON `Faculty`.`dean_id` = `dean`.`id` WHERE `Faculty`.`name` = (:name)', {
-        replacements: {name: name},
+    db.sequelize.query('SELECT `Faculty`.`id`, `Faculty`.`name`, `Faculty`.`location`, `Faculty`.`dean_id`, `Faculty`.`contact_phone`, `Faculty`.`contact_email`, `Faculty`.`createdAt`, `Faculty`.`updatedAt`, `dean`.`id` AS `dean.id`, `dean`.`faculty_id` AS `dean.faculty_id`, `dean`.`fname` AS `dean.fname`, `dean`.`lname` AS `dean.lname`, `dean`.`gender` AS `dean.gender`, `dean`.`phone` AS `dean.phone`, `dean`.`email` AS `dean.email`, `dean`.`password` AS `dean.password`, `dean`.`dob` AS `dean.dob`, `dean`.`address` AS `dean.address`, `dean`.`desg_id` AS `dean.desg_id`, `dean`.`createdAt` AS `dean.createdAt`, `dean`.`updatedAt` AS `dean.updatedAt` FROM `Faculties` AS `Faculty` LEFT OUTER JOIN `Faculty_Members` AS `dean` ON `Faculty`.`dean_id` = `dean`.`id` WHERE `Faculty`.`id` = (:facultyId)', {
+        replacements: {facultyId: facultyId},
         type: db.sequelize.QueryTypes.SELECT,
         nest: true
     })

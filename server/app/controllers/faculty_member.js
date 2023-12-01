@@ -6,6 +6,9 @@ const statusCodes = require("./../constants/statusCodes");
 const messages = require("./../constants/messages");
 const validate = require("./../validation").Faculty_Member;
 const { hashPassword, passwordValidity, generateToken } = require("./../functions/helpers");
+// const { Faculty } = require("../../models").Faculty;
+const Designation = require("./../models").Designation;
+const db = require('./../models');
 
 const create = async (req, res) => {
     const {error} = validate(req.body, false, false);    
@@ -22,7 +25,7 @@ const create = async (req, res) => {
             res.status(statusCodes.CREATED).json({
                 success: true,
                 message: messages.ResourceCreated,
-                data: _.pick(faculty_member, ["id", "faculty_name", "name", "phone", "email", "dob", "address", "designation"])
+                data: _.pick(faculty_member, ["id", "faculty_id", "fname", "lname", "gender", "phone", "email", "dob", "address", "designation"])
             });
         })
         .catch((err) => {
@@ -62,8 +65,34 @@ const retrieve = (req, res) => {
 }
 
 const list = (req, res) => {
-    Faculty_Member.findAll({
-        attributes: { exclude: ['password'] }
+    // Faculty_Member.findAll({
+    //     include: {
+    //         model: Designation,
+    //         required: true
+    //     },
+    //     // include: {
+    //     //     model: Faculty,
+    //     //     required: true
+    //     // },
+    //     attributes: { exclude: ['password'] }
+    // }).then(faculty_members => {
+    //     res.status(statusCodes.OK).json({
+    //         success: true,
+    //         data: faculty_members
+    //     });
+    // })
+    // .catch((err) => {
+    //     console.log("azib", err)
+    //     res.status(statusCodes.BAD_REQUEST).json({
+    //         success: false,
+    //         err: err
+    //     });
+    // });
+    // select * from Faculty_Members f inner join Designations d on f.desg_id = d.id join Faculties on Faculties.id = f.faculty_id
+    // 'select `f`.`id`, `f`.`fname`, `f`.`lname`, `f`.`desg_id`, `f`.`email`, `f`.`phone`, `f`.`address`, `f`.`dob`, `d`.`title` from Faculty_Members f inner join Designations d on f.desg_id = d.id'
+    db.sequelize.query('select `f`.`id`, `f`.`fname`, `f`.`lname`, `f`.`desg_id`, `f`.`email`, `f`.`phone`, `f`.`address`, `f`.`dob`, `d`.`title` from Faculty_Members f inner join Designations d on f.desg_id = d.id', {
+        type: db.sequelize.QueryTypes.SELECT,
+        nest: true
     }).then(faculty_members => {
         res.status(statusCodes.OK).json({
             success: true,
@@ -71,12 +100,14 @@ const list = (req, res) => {
         });
     })
     .catch((err) => {
+        console.log("azib", err)
         res.status(statusCodes.BAD_REQUEST).json({
             success: false,
             err: err
         });
     });
 }
+
 
 const update = async (req, res) => {
     const {error} = validate(req.body, true, false);    

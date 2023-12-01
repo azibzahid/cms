@@ -19,11 +19,16 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 import MomentUtils from '@date-io/moment';
 import MenuItem from '@material-ui/core/MenuItem';
 import Grid from '@material-ui/core/Grid';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
 
 const faculty_id = localStorage.getItem('id');
 const authToken = localStorage.getItem('x-auth-token');
 var faculty_members = [];
 var faculties = [];
+var designations = [];
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -74,14 +79,16 @@ export default function FacultyMemberList() {
   const [successMessage, setSuccessMessage] = useState("");
   const [open, setOpen] = React.useState(false);
 
-  const [name, setName] = useState("");
-  const [faculty_name, setFacultyName] = useState("");
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [gender, setGender] = useState("");
+  const [faculty_id, setFacultyId] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
   const [dob, setDob] = useState("");
-  const [designation, setDesignation] = useState("");
+  const [desig_id, setDesignation] = useState("");
 
   const retrieveFacultyMembers = () => {
     faculty_members = [];
@@ -98,7 +105,26 @@ export default function FacultyMemberList() {
     });
   }
 
-  if (loading) retrieveFacultyMembers();
+  const retrieveDesignations = () => {
+    designations = [];
+  
+    Axios.get(`http://localhost:4000/api/designation`, {})
+    .then((response) => {
+      if(response.status == 200) {
+        designations = response.data.data;
+            
+        setLoading(false);
+        console.log(designations);
+      }
+    }).catch((e) => {
+      console.log(e);
+    });
+  }
+
+  if (loading){
+    retrieveFacultyMembers();
+    retrieveDesignations();
+  }
 
   const getIndex = (id) => {
     console.log(id);
@@ -170,13 +196,15 @@ export default function FacultyMemberList() {
   const editFacultyDialog = (event, faculty_member_id) => {
     event.stopPropagation();
     console.log('edit clicked');
-    setName(faculty_members[getIndex(faculty_member_id)].name);
-    setFacultyName(faculty_members[getIndex(faculty_member_id)].faculty_name);
+    setFname(faculty_members[getIndex(faculty_member_id)].fname);
+    setLname(faculty_members[getIndex(faculty_member_id)].lname);
+    setFacultyId(faculty_members[getIndex(faculty_member_id)].faculty_id);
+    setGender(faculty_members[getIndex(faculty_member_id)].faculty_gender);
     setPhone(faculty_members[getIndex(faculty_member_id)].phone);
     setEmail(faculty_members[getIndex(faculty_member_id)].email);
     setDob(faculty_members[getIndex(faculty_member_id)].dob);
     setAddress(faculty_members[getIndex(faculty_member_id)].address);
-    setDesignation(faculty_members[getIndex(faculty_member_id)].designation);
+    setDesignation(faculty_members[getIndex(faculty_member_id)].desg_id);
     setOpen(true);
   }
 
@@ -184,13 +212,15 @@ export default function FacultyMemberList() {
     setOpen(false);
     console.log('Dialog closed');
     Axios.put(`http://localhost:4000/api/faculty-member/${facultyMemberSelected}`, {
-      faculty_name: faculty_name,
-      name: name,
+      faculty_id: faculty_id,
+      fname: fname,
+      lname: lname,
       phone: phone,
       email: email,
       dob: dob,
       address: address,
-      designation: designation
+      desg_id: desig_id,
+      gender: gender
     }, {
       headers: {
         'x-auth-token': authToken
@@ -232,8 +262,8 @@ export default function FacultyMemberList() {
               {faculty_members.map((faculty_member, index) => (
                 <StyledTableRow hover key={faculty_member.name} onClick={(event) => handleClick(event, faculty_member.id)}>
                   <StyledTableCell align="center">{index + 1}</StyledTableCell>
-                  <StyledTableCell align="center">{faculty_member.name}</StyledTableCell>
-                  <StyledTableCell align="center">{faculty_member.designation}</StyledTableCell>
+                  <StyledTableCell align="center">{faculty_member.fname +" "+ faculty_member.lname}</StyledTableCell>
+                  <StyledTableCell align="center">{faculty_member.title}</StyledTableCell>
                   <StyledTableCell align="center">{faculty_member.email}</StyledTableCell>
                   <StyledTableCell align="center">{faculty_member.phone}</StyledTableCell>
                 </StyledTableRow >
@@ -267,8 +297,23 @@ export default function FacultyMemberList() {
             <Table size="small">
               <TableBody>
                   <StyledTableRow  key={1}>
-                    <StyledTableCell align="left">Faculty Name: {faculty_members[getIndex(facultyMemberSelected)].faculty_name}</StyledTableCell>
-                    <StyledTableCell align="left">Designation: {faculty_members[getIndex(facultyMemberSelected)].designation}</StyledTableCell>
+                    <StyledTableCell align="left">Faculty Name:
+                                          {(() => {
+                                            if (faculty_members[getIndex(facultyMemberSelected)].id >= 9 && faculty_members[getIndex(facultyMemberSelected)].id <= 11) {
+                                              return " School of Computing";
+                                            } else if (faculty_members[getIndex(facultyMemberSelected)].id >= 12 && faculty_members[getIndex(facultyMemberSelected)].id <= 14) {
+                                              return " Swason School of Engineering";
+                                            } else if (faculty_members[getIndex(facultyMemberSelected)].id >= 15 && faculty_members[getIndex(facultyMemberSelected)].id <= 17) {
+                                              return " Department of Music";
+                                            } else if (faculty_members[getIndex(facultyMemberSelected)].id >= 18 && faculty_members[getIndex(facultyMemberSelected)].id <= 20) {
+                                              return " Joseph M. Katz Graduate School of Business";
+                                            }
+                                            // Add more conditions for other desg_id values
+                    
+                                            // Default content if none of the conditions match
+                                            return "School of Computing";
+                                          })()}</StyledTableCell>
+                    <StyledTableCell align="left">Designation: {faculty_members[getIndex(facultyMemberSelected)].title}</StyledTableCell>
                   </StyledTableRow >
                   <StyledTableRow  key={2}>
                     <StyledTableCell align="left">Email: {faculty_members[getIndex(facultyMemberSelected)].email}</StyledTableCell>
@@ -306,17 +351,17 @@ export default function FacultyMemberList() {
                     variant="outlined"
                     margin="normal"
                     fullWidth
-                    name="faculty_name"
+                    fname="faculty_name"
                     id="faculty_name"
                     variant="outlined"
                     label="Faculty"
-                    value={faculty_name}
+                    value={faculty_id}
                     onChange={(e) => {
-                      setFacultyName(e.target.value);
+                      setFacultyId(e.target.value);
                     }}
                   >
                     {faculties.map((faculty, index) => (
-                      <MenuItem value={faculty.name}>{faculty.name}</MenuItem>
+                      <MenuItem value={faculty.id}>{faculty.name}</MenuItem>
                     ))}
                   </TextField>
                   <TextField
@@ -324,13 +369,27 @@ export default function FacultyMemberList() {
                     margin="normal"
                     required
                     fullWidth
-                    id="name"
-                    label="Name"
-                    name="name"
-                    autoComplete="name"
-                    value={name}
+                    id="fname"
+                    label="First Name"
+                    name="fname"
+                    autoComplete="fname"
+                    value={fname}
                     onChange={(e) => {
-                      setName(e.target.value);
+                      setFname(e.target.value);
+                    }}
+                  />
+                  <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="lname"
+                    label="Last Name"
+                    name="lname"
+                    autoComplete="lname"
+                    value={lname}
+                    onChange={(e) => {
+                      setLname(e.target.value);
                     }}
                   />
                   <TextField
@@ -373,7 +432,7 @@ export default function FacultyMemberList() {
                       setAddress(e.target.value);
                     }}
                   />
-                  <TextField
+                  {/* <TextField
                     variant="outlined"
                     margin="normal"
                     required
@@ -382,11 +441,48 @@ export default function FacultyMemberList() {
                     label="Designation"
                     name="designation"
                     autoComplete="designation"
-                    value={designation}
+                    // value={desig_id}
                     onChange={(e) => {
                       setDesignation(e.target.value);
                     }}
-                  />
+                  >
+                  {designations.map((designation, index) => (
+                    <MenuItem value={designation.id}>{designation.title}</MenuItem>
+                  ))}
+                  </TextField> */}
+                    <TextField
+                      select
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      fullWidth
+                      id="designation"
+                      label="designation"
+                      name="Designation"
+                      autoComplete="designation"
+                      onChange={(e) => {
+                        setDesignation(e.target.value);
+                      }}
+                      >
+                      {designations.map((designation, index) => (
+                        <MenuItem value={designation.id}>{designation.title}</MenuItem>
+                      ))}
+                    </TextField>
+                  <div>
+                      <FormLabel>Gender</FormLabel>
+                      <RadioGroup 
+                          row
+                          aria-label="gender" 
+                          name="gender1"
+                          onChange={(e) => {
+                          setGender(e.target.value);
+                          }}
+                          >
+                          <FormControlLabel value="F" control={<Radio color="primary"/>} label="Female" />
+                          <FormControlLabel value="M" control={<Radio color="primary"/>} label="Male" />
+                          <FormControlLabel value="O" control={<Radio color="primary"/>} label="Other" />
+                      </RadioGroup>
+                  </div>
                   <KeyboardDatePicker
                     margin="normal"
                     id="date-picker-dialog"

@@ -6,23 +6,16 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        autoIncrement: true
       },
       reg_no: {
         type: Sequelize.INTEGER,
-        onDelete: 'CASCADE',
-        references: {
-          model: 'Students',
-          key: 'reg_no'
-        },
+        allowNull: false
       },
       section_id: {
         type: Sequelize.INTEGER,
-        onDelete: 'CASCADE',
-        references: {
-          model: 'Sections',
-          key: 'id'
-        },
+        allowNull: false
       },
       lecture_no: {
         type: Sequelize.INTEGER,

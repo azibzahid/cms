@@ -6,23 +6,36 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         unique: true,
-        primaryKey: true,
+        primaryKey: true
       },
-      name: {
+      fname: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      lname: {
         type: Sequelize.STRING,
         allowNull: false,
       },
       phone: {
         type: Sequelize.STRING
       },
+      gender: {
+        type: Sequelize.STRING
+      },
       email: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
+        validate: {
+          isEmail: true
+        }
       },
       password: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          len: [5, 1024]
+        }
       },
       dob: {
         type: Sequelize.DATE,
@@ -35,20 +48,15 @@ module.exports = {
       address: {
         type: Sequelize.STRING
       },
-      faculty_name: {
-        type: Sequelize.STRING,
-        onDelete: 'SET NULL',
-        references: {
-          model: 'Faculties',
-          key: 'name',
-          as: 'faculty_name'
-        },
-      },
       gender: {
         type: Sequelize.STRING
       },
       cgpa: {
         type: Sequelize.FLOAT
+      },
+      faculty_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

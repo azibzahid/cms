@@ -20,10 +20,6 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       primaryKey: true
     },
-    faculty_name: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
     name: {
       type: DataTypes.STRING,
       allowNull: false
@@ -36,6 +32,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: false
     },
+    faculty_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Course',
@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       as: 'sections'
     });
     Course.belongsTo(models.Faculty, {
-      foreignKey: 'faculty_name'
+      foreignKey: 'faculty_id'
     });
   };
   return Course;

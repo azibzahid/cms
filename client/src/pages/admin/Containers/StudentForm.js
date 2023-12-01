@@ -52,8 +52,9 @@ export default function StudentForm() {
 
   const currentDate = new Date();
   const [reg_no, setRegNo] = useState();
-  const [name, setName] = useState("");
-  const [faculty_name, setFacultyName] = useState("");
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [faculty_id, setFacultyId] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -70,8 +71,9 @@ export default function StudentForm() {
     setSuccessMessage(null);
     Axios.post('http://localhost:4000/api/student', {
       reg_no: reg_no,
-      name: name,
-      faculty_name: faculty_name,
+      fname: fname,
+      lname: lname,
+      faculty_id: faculty_id,
       phone: phone,
       email: email,
       password: password,
@@ -135,16 +137,16 @@ export default function StudentForm() {
                         variant="outlined"
                         margin="normal"
                         fullWidth
-                        name="faculty_name"
-                        id="faculty_name"
+                        name="faculty_id"
+                        id="faculty_id"
                         variant="outlined"
                         label="Faculty"
                         onChange={(e) => {
-                        setFacultyName(e.target.value);
+                        setFacultyId(e.target.value);
                         }}
                     >
                         {faculties.map((faculty, index) => (
-                        <MenuItem value={faculty.name}>{faculty.name}</MenuItem>
+                        <MenuItem value={faculty.id}>{faculty.name}</MenuItem>
                         ))}
                     </TextField>
                     <TextField
@@ -165,12 +167,25 @@ export default function StudentForm() {
                         margin="normal"
                         required
                         fullWidth
-                        id="name"
-                        label="Name"
-                        name="name"
-                        autoComplete="name"
+                        id="fname"
+                        label="First Name"
+                        name="fname"
+                        autoComplete="fname"
                         onChange={(e) => {
-                        setName(e.target.value);
+                        setFname(e.target.value);
+                        }}
+                    />
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="lname"
+                        label="Last Name"
+                        name="lname"
+                        autoComplete="lname"
+                        onChange={(e) => {
+                        setLname(e.target.value);
                         }}
                     />
                     <TextField

@@ -14,15 +14,25 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Faculty_Member.init({
-    faculty_name: {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      unique: true,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    fname: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    name: {
+    lname: {
       type: DataTypes.STRING,
       allowNull: false
     },
     phone: {
+      type: DataTypes.STRING
+    },
+    gender: {
       type: DataTypes.STRING
     },
     email: {
@@ -47,8 +57,12 @@ module.exports = (sequelize, DataTypes) => {
     address: {
       type: DataTypes.STRING
     },
-    designation: {
-      type: DataTypes.STRING,
+    faculty_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    desg_id: {
+      type: DataTypes.INTEGER,
       allowNull: false
     }
   }, {
@@ -58,11 +72,14 @@ module.exports = (sequelize, DataTypes) => {
   Faculty_Member.associate = (models) => {
     // define association here
     Faculty_Member.belongsTo(models.Faculty, {
-      foreignKey: 'faculty_name'
+      foreignKey: 'faculty_id'
     });
     Faculty_Member.hasMany(models.Section, {
       foreignKey: 'faculty_member_id',
       as: 'sections'
+    });
+    Faculty_Member.hasOne(models.Designation, {
+      foreignKey: 'id'
     });
   };
   return Faculty_Member;

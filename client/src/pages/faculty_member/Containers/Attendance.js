@@ -248,7 +248,7 @@ export default function CourseList() {
                                 }}
                             >
                                 {students.map((student, index) => (
-                                <MenuItem value={student.reg_no}>{student.reg_no + ": " + student.name}</MenuItem>
+                                <MenuItem value={student.reg_no}>{student.reg_no + ": " + student.fname + " " + student.lname}</MenuItem>
                                 ))}
                             </TextField>
                             <div>

@@ -6,16 +6,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
-        primaryKey: true,
-      },
-      faculty_name: {
-        type: Sequelize.STRING,
-        onDelete: 'SET NULL',
-        references: {
-          model: 'Faculties',
-          key: 'name',
-          as: 'faculty_name',
-        },
+        primaryKey: true
       },
       name: {
         type: Sequelize.STRING,
@@ -27,6 +18,10 @@ module.exports = {
       },
       description: {
         type: Sequelize.TEXT,
+        allowNull: false
+      },
+      faculty_id: {
+        type: Sequelize.INTEGER,
         allowNull: false
       },
       createdAt: {

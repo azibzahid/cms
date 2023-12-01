@@ -79,8 +79,10 @@ export default function StudentList() {
   const [successMessage, setSuccessMessage] = useState("");
   const [open, setOpen] = React.useState(false);
 
-  const [name, setName] = useState("");
-  const [faculty_name, setFacultyName] = useState("");
+
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [faculty_id, setFacultyId] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -174,8 +176,9 @@ export default function StudentList() {
   const editFacultyDialog = (event, reg_no) => {
     event.stopPropagation();
     console.log('edit clicked');
-    setName(students[getIndex(reg_no)].name);
-    setFacultyName(students[getIndex(reg_no)].faculty_name);
+    setFname(students[getIndex(reg_no)].fname);
+    setLname(students[getIndex(reg_no)].lname);
+    setFacultyId(students[getIndex(reg_no)].faculty_id);
     setPhone(students[getIndex(reg_no)].phone);
     setEmail(students[getIndex(reg_no)].email);
     setDob(students[getIndex(reg_no)].dob);
@@ -189,8 +192,9 @@ export default function StudentList() {
     setOpen(false);
     console.log('Dialog closed');
     Axios.put(`http://localhost:4000/api/student/${studentSelected}`, {
-      faculty_name: faculty_name,
-      name: name,
+      fname: fname,
+      lname: lname,
+      faculty_id: faculty_id,
       phone: phone,
       email: email,
       dob: dob,
@@ -238,7 +242,7 @@ export default function StudentList() {
               {students.map((student, index) => (
                 <StyledTableRow hover key={student.name} onClick={(event) => handleClick(event, student.reg_no)}>
                   <StyledTableCell align="center">{index + 1}</StyledTableCell>
-                  <StyledTableCell align="center">{student.name}</StyledTableCell>
+                  <StyledTableCell align="center">{student.fname + " " + student.lname}</StyledTableCell>
                   <StyledTableCell align="center">{student.faculty_name}</StyledTableCell>
                   <StyledTableCell align="center">{student.email}</StyledTableCell>
                   <StyledTableCell align="center">{student.batch}</StyledTableCell>
@@ -273,7 +277,23 @@ export default function StudentList() {
             <Table size="small">
               <TableBody>
                 <StyledTableRow  key={1}>
-                    <StyledTableCell align="left">Faculty Name: {students[getIndex(studentSelected)].faculty_name}</StyledTableCell>
+                {/* students[getIndex(studentSelected)].faculty_id */}
+                    <StyledTableCell align="left">Faculty Namess:
+                                          {(() => {
+                                            if (students[getIndex(studentSelected)].faculty_id === 6) {
+                                              return " School of Computing";
+                                            } else if (students[getIndex(studentSelected)].faculty_id === 7) {
+                                              return " Swason School of Engineering";
+                                            } else if (students[getIndex(studentSelected)].faculty_id === 8) {
+                                              return " Department of Music";
+                                            } else if (students[getIndex(studentSelected)].faculty_id === 9) {
+                                              return " Joseph M. Katz Graduate School of Business";
+                                            }
+                                            // Add more conditions for other desg_id values
+                    
+                                            // Default content if none of the conditions match
+                                            return "School of Computing";
+                                          })()}</StyledTableCell>
                     <StyledTableCell align="left">Email: {students[getIndex(studentSelected)].email}</StyledTableCell>
                 </StyledTableRow >
                 <StyledTableRow  key={2}>
@@ -320,17 +340,17 @@ export default function StudentList() {
                     variant="outlined"
                     margin="normal"
                     fullWidth
-                    name="faculty_name"
-                    id="faculty_name"
+                    name="faculty_id"
+                    id="faculty_id"
                     variant="outlined"
                     label="Faculty"
-                    value={faculty_name}
+                    value={faculty_id}
                     onChange={(e) => {
-                      setFacultyName(e.target.value);
+                      setFacultyId(e.target.value);
                     }}
                   >
                     {faculties.map((faculty, index) => (
-                      <MenuItem value={faculty.name}>{faculty.name}</MenuItem>
+                      <MenuItem value={faculty.id}>{faculty.name}</MenuItem>
                     ))}
                   </TextField>
                   <TextField
@@ -338,13 +358,27 @@ export default function StudentList() {
                     margin="normal"
                     required
                     fullWidth
-                    id="name"
-                    label="Name"
-                    name="name"
-                    autoComplete="name"
-                    value={name}
+                    id="fname"
+                    label="First Name"
+                    name="fname"
+                    autoComplete="fname"
+                    value={fname}
                     onChange={(e) => {
-                      setName(e.target.value);
+                      setFname(e.target.value);
+                    }}
+                  />
+                  <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="lname"
+                    label="Last Name"
+                    name="lname"
+                    autoComplete="lname"
+                    value={lname}
+                    onChange={(e) => {
+                      setLname(e.target.value);
                     }}
                   />
                   <TextField

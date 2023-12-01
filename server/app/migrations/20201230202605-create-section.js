@@ -6,7 +6,8 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        autoIncrement: true
       },
       course_code: {
         type: Sequelize.STRING,
@@ -18,13 +19,13 @@ module.exports = {
       },
       faculty_member_id: {
         type: Sequelize.INTEGER,
-        onDelete: 'CASCADE',
-        references: {
-          model: 'Faculty_Members',
-          key: 'id'
-        },
+        allowNull: false
       },
       room_no: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      capacity: {
         type: Sequelize.INTEGER,
         allowNull: false
       },

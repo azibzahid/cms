@@ -7,5 +7,6 @@ module.exports = (app) => {
     app.use("/api/section", require("./section")),
     app.use("/api/result", require("./result")),
     app.use("/api/attendance", require("./attendance")),
-    app.use("/api/admin", require("./admin"))
+    app.use("/api/admin", require("./admin")),
+    app.use("/api/designation", require("./designation"))
 }

@@ -125,10 +125,19 @@ export default function CourseList() {
       setCourseSelected(course_code);
   }
 
+  const totalCreditHours = () => {
+    let total = 0
+    {courses.map((course, index) => (
+        total += course.credit_hours
+    ))}
+
+    return total;
+}
+
   return (
     <React.Fragment>
       <Paper className={classes.paper} elevation={6}>
-        <Typography component="h2" variant="h6" color="primary" gutterBottom>Courses</Typography>
+        <Typography component="h2" variant="h6" color="primary" gutterBottom>Coursessss</Typography>
         <Table size="small">
           <TableHead>
             <TableRow>
@@ -137,7 +146,7 @@ export default function CourseList() {
               <StyledTableCell align="center">Course Title</StyledTableCell>
               <StyledTableCell align="center">Section</StyledTableCell>
               <StyledTableCell align="center">Credit Hours</StyledTableCell>
-              <StyledTableCell align="center">Faculty</StyledTableCell>
+              <StyledTableCell align="center">Semester</StyledTableCell>
             </TableRow>
           </TableHead>
           {loading ? <div>Loading...</div>
@@ -151,13 +160,18 @@ export default function CourseList() {
                   <StyledTableCell align="center">{sections[index].name}</StyledTableCell>
                   <StyledTableCell align="center">{course.credit_hours}</StyledTableCell>
                   <StyledTableCell align="center">
-                    {faculty_members[index].name}
+                    {"Fall 2023"}
                   </StyledTableCell>
                 </StyledTableRow >
               ))}
             </TableBody>
           }
         </Table>
+        <br></br>
+      </Paper>
+      <Paper className={classes.paper} elevation={6}>
+        <Typography component="h2" variant="h6" color="primary" gutterBottom></Typography>
+            <Box style={{ marginLeft: 300, fontSize: 20, fontFamily: "Roboto" }} align="centre">Total number of credit hours student registered this semester is: {totalCreditHours()}</Box>
         <br></br>
       </Paper>
       <Box className={classes.fixedHeight}></Box>
@@ -174,7 +188,7 @@ export default function CourseList() {
             <Table size="small">
               <TableBody>
                   <StyledTableRow  key={1}>
-                      <StyledTableCell align="left">Faculty: {courses[getIndex(courseSelected)].faculty_name}</StyledTableCell>
+                      <StyledTableCell align="left">Faculty: {"School of Computing"}</StyledTableCell>
                   </StyledTableRow >
                   <StyledTableRow  key={2}>
                       <StyledTableCell align="left">Course Code: {courses[getIndex(courseSelected)].course_code}</StyledTableCell>

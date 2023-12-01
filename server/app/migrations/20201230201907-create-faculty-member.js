@@ -3,35 +3,40 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Faculty_Members', {
       id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
-        autoIncrement: true,
+        unique: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        autoIncrement: true
       },
-      faculty_name: {
+      fname: {
         type: Sequelize.STRING,
-        onDelete: 'SET NULL',
-        references: {
-          model: 'Faculties',
-          key: 'name',
-          as: 'faculty_name',
-        },
+        allowNull: false
       },
-      name: {
+      lname: {
         type: Sequelize.STRING,
         allowNull: false
       },
       phone: {
         type: Sequelize.STRING
       },
+      gender: {
+        type: Sequelize.STRING
+      },
       email: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
+        validate: {
+          isEmail: true
+        }
       },
       password: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          len: [5, 1024]
+        }
       },
       dob: {
         type: Sequelize.DATE,
@@ -40,8 +45,12 @@ module.exports = {
       address: {
         type: Sequelize.STRING
       },
-      designation: {
-        type: Sequelize.STRING,
+      faculty_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      desg_id: {
+        type: Sequelize.INTEGER,
         allowNull: false
       },
       createdAt: {

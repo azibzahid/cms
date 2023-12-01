@@ -72,8 +72,8 @@ export default function AccountDetails() {
             <Table size="small">
                 <TableBody>
                     <StyledTableRow  key={1}>
-                      <StyledTableCell align="left">Faculty Name: {faculty_member.faculty_name}</StyledTableCell>
-                      <StyledTableCell align="left">Designation: {faculty_member.designation}</StyledTableCell>
+                      <StyledTableCell align="left">Faculty Name: {"School of Computing"}</StyledTableCell>
+                      <StyledTableCell align="left">Designation: {"Dean"}</StyledTableCell>
                     </StyledTableRow >
                     <StyledTableRow  key={2}>
                       <StyledTableCell align="left">Email: {faculty_member.email}</StyledTableCell>

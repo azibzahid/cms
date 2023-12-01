@@ -250,6 +250,7 @@ export default function RegisterCourses() {
               <StyledTableCell align="center">Course Code</StyledTableCell>
               <StyledTableCell align="center">Course Title</StyledTableCell>
               <StyledTableCell align="center">Credit Hours</StyledTableCell>
+              <StyledTableCell align="center">Semester</StyledTableCell>
               {/* <StyledTableCell align="center">Faculty</StyledTableCell> */}
             </TableRow>
           </TableHead>
@@ -262,6 +263,7 @@ export default function RegisterCourses() {
                   <StyledTableCell align="center">{course.course_code}</StyledTableCell>
                   <StyledTableCell align="center">{course.name}</StyledTableCell>
                   <StyledTableCell align="center">{course.credit_hours}</StyledTableCell>
+                  <StyledTableCell align="center">{"Fall 2023"}</StyledTableCell>
                   {/* <StyledTableCell align="center">
                     {faculty_members[index].name}
                   </StyledTableCell> */}

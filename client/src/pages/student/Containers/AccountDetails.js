@@ -72,7 +72,7 @@ export default function AccountDetails() {
             <Table size="small">
                 <TableBody>
                     <StyledTableRow  key={student.reg_no}>
-                        <StyledTableCell align="left">Faculty Name: {student.faculty_name}</StyledTableCell>
+                        <StyledTableCell align="left">Faculty Name: {"School of Computing"}</StyledTableCell>
                         <StyledTableCell align="left">Email: {student.email}</StyledTableCell>
                     </StyledTableRow >
                     <StyledTableRow  key={student.reg_no}>

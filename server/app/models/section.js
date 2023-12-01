@@ -29,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
     room_no: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    capacity: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   }, {
     sequelize,

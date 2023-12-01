@@ -13,11 +13,16 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Faculty.init({
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      unique: true,
+      primaryKey: true,
+      autoIncrement: true
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
-      primaryKey: true
     },
     location: {
       type: DataTypes.STRING
@@ -43,15 +48,15 @@ module.exports = (sequelize, DataTypes) => {
   Faculty.associate = (models) => {
     // define association here
     Faculty.hasMany(models.Student, {
-      foreignKey: 'faculty_name',
+      foreignKey: 'faculty_id',
       as: 'students'
     });
     Faculty.hasMany(models.Course, {
-      foreignKey: 'faculty_name',
+      foreignKey: 'faculty_id',
       as: 'courses'
     });
     Faculty.hasMany(models.Faculty_Member, {
-      foreignKey: 'faculty_name',
+      foreignKey: 'faculty_id',
       as: 'faculty_members'
     });
   };

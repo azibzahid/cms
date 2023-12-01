@@ -80,9 +80,9 @@ export default function FacultyList() {
   const [contact_phone, setContactPhone] = useState("");
   const [contact_email, setContactEmail] = useState("");
 
-  const retrieveFacultyDean = (faculty_name) => {
+  const retrieveFacultyDean = (faculty_id) => {
     return new Promise((resolve, reject) => {
-        Axios.get(`http://localhost:4000/api/faculty/${faculty_name}/dean`, {})
+        Axios.get(`http://localhost:4000/api/faculty/${faculty_id}/dean`, {})
         .then((response) => {
           if(response.status == 200){
             facultiesWithDean.push(response.data.data[0]);
@@ -108,7 +108,7 @@ export default function FacultyList() {
         
         let requests = [];
         faculties.forEach(faculty => {
-          requests.push(retrieveFacultyDean(faculty.name));
+          requests.push(retrieveFacultyDean(faculty.id));
         });
 
         Promise.all(requests).then(() => {
@@ -128,28 +128,28 @@ export default function FacultyList() {
 
   if (loading) retrieveFaculties();
 
-  const getIndex = (name) => {
-    console.log(name);
+  const getIndex = (id) => {
+    console.log(id);
     var res;
     facultiesWithDean.forEach((faculty, index) => {
-      if (name == faculty.name) {
+      if (id == faculty.id) {
         res = index;
       }
     });
     return res;
   }
 
-  const handleClick = (event, faculty_name) => {
+  const handleClick = (event, faculty_id) => {
       setIsSelected(true);
-      setFacultySelected(faculty_name);
-      retrieveFacultyMembers(faculty_name);
+      setFacultySelected(faculty_id);
+      retrieveFacultyMembers(faculty_id);
   }
 
-  const deleteFaculty = (event, faculty_name) => {
+  const deleteFaculty = (event, faculty_id) => {
     event.stopPropagation()
     setErrorMessage(null);
     setSuccessMessage(null);
-    Axios.delete(`http://localhost:4000/api/faculty/${faculty_name}`, {
+    Axios.delete(`http://localhost:4000/api/faculty/${faculty_id}`, {
       headers: {
         'x-auth-token': authToken
       },
@@ -181,9 +181,9 @@ export default function FacultyList() {
 
   
 
-  const retrieveFacultyMembers= (faculty_name) => {
+  const retrieveFacultyMembers = (faculty_id) => {
     facultyMembers = [];
-    Axios.get(`http://localhost:4000/api/faculty/${faculty_name}/members`, {})
+    Axios.get(`http://localhost:4000/api/faculty/${faculty_id}/members`, {})
     .then((response) => {
       if(response.status == 200){
         const faculty = response.data.data;
@@ -201,7 +201,7 @@ export default function FacultyList() {
     });
   }
   
-  const editFacultyDialog = (event, faculty_name) => {
+  const editFacultyDialog = (event, faculty_id) => {
     event.stopPropagation();
     console.log('clicked');
     setOpen(true);
@@ -257,10 +257,10 @@ export default function FacultyList() {
             :
             <TableBody>
               {facultiesWithDean.map((faculty, index) => (
-                <StyledTableRow hover key={faculty.name} onClick={(event) => handleClick(event, faculty.name)}>
+                <StyledTableRow hover key={faculty.id} onClick={(event) => handleClick(event, faculty.id)}>
                   <StyledTableCell align="center">{index + 1}</StyledTableCell>
                   <StyledTableCell align="center">{faculty.name}</StyledTableCell>
-                  <StyledTableCell align="center">{faculty.dean_id ? faculty.dean.name : 'N/A'}</StyledTableCell>
+                  <StyledTableCell align="center">{faculty.dean_id ? faculty.dean.fname + " " + faculty.dean.lname + "" : 'N/A'}</StyledTableCell>
                   <StyledTableCell align="center">{faculty.location ? faculty.location : 'N/A'}</StyledTableCell>
                   <StyledTableCell align="center">{faculty.contact_email}</StyledTableCell>
                   <StyledTableCell align="center">{faculty.contact_phone}</StyledTableCell>
@@ -285,17 +285,17 @@ export default function FacultyList() {
                   <Typography component="h2" variant="h6" color="primary" gutterBottom>{facultiesWithDean[getIndex(facultySelected)].name}</Typography>
                 </Box>
                 <Box p={1}>
-                  <Button variant="contained" color="primary" onClick={(event) => editFacultyDialog(event, facultiesWithDean[getIndex(facultySelected)].name)}>Edit</Button>
+                  <Button variant="contained" color="primary" onClick={(event) => editFacultyDialog(event, facultiesWithDean[getIndex(facultySelected)].id)}>Edit</Button>
                 </Box>
                 <Box p={1}>
-                  <Button variant="contained" className={classes.deleteButton} onClick={(event) => deleteFaculty(event, facultiesWithDean[getIndex(facultySelected)].name)}>Delete</Button>
+                  <Button variant="contained" className={classes.deleteButton} onClick={(event) => deleteFaculty(event, facultiesWithDean[getIndex(facultySelected)].id)}>Delete</Button>
                 </Box>
             </Box>
             <br></br>
             <Table size="small">
               <TableBody>
                   <StyledTableRow  key={1}>
-                    <StyledTableCell align="left">Dean: {facultiesWithDean[getIndex(facultySelected)].dean_id ? facultiesWithDean[getIndex(facultySelected)].dean.name : 'N/A'}</StyledTableCell>
+                    <StyledTableCell align="left">Dean: {facultiesWithDean[getIndex(facultySelected)].dean_id ? facultiesWithDean[getIndex(facultySelected)].dean.fname + " " +  "" + facultiesWithDean[getIndex(facultySelected)].dean.lname : 'N/A'}</StyledTableCell>
                   </StyledTableRow >
                   <StyledTableRow  key={2}>
                     <StyledTableCell align="left">Location: {facultiesWithDean[getIndex(facultySelected)].location ? facultiesWithDean[getIndex(facultySelected)].location : 'N/A'}</StyledTableCell>
@@ -324,8 +324,36 @@ export default function FacultyList() {
                 {facultyMembers.map((faculty_member, index) => (
                   <StyledTableRow hover key={faculty_member.name} >
                     <StyledTableCell align="center">{index + 1}</StyledTableCell>
-                    <StyledTableCell align="center">{faculty_member.name}</StyledTableCell>
-                    <StyledTableCell align="center">{faculty_member.designation}</StyledTableCell>
+                    <StyledTableCell align="center">{faculty_member.fname + " " + faculty_member.lname}</StyledTableCell>
+                    <StyledTableCell align="center">
+                      {(() => {
+                        if (faculty_member.desg_id === 1) {
+                          return "Professor";
+                        } else if (faculty_member.desg_id === 2) {
+                          return "Associate Professor";
+                        } else if (faculty_member.desg_id === 3) {
+                          return "Assistant Professor";
+                        } else if (faculty_member.desg_id === 4) {
+                          return "Lecturer";
+                        } else if (faculty_member.desg_id === 5) {
+                          return "Research Assistant";
+                        } else if (faculty_member.desg_id === 6) {
+                          return "Dean";
+                        } else if (faculty_member.desg_id === 7) {
+                          return "Chairperson";
+                        } else if (faculty_member.desg_id === 8) {
+                          return "Adjunct Faculty";
+                        } else if (faculty_member.desg_id === 9) {
+                          return "Visiting Scholar";
+                        } else if (faculty_member.desg_id === 10) {
+                          return "Postdoctoral Fellow";
+                        }
+                        // Add more conditions for other desg_id values
+
+                        // Default content if none of the conditions match
+                        return "Default Content";
+                      })()}
+                    </StyledTableCell>
                     <StyledTableCell align="center">{faculty_member.email}</StyledTableCell>
                     <StyledTableCell align="center">{faculty_member.phone}</StyledTableCell>
                   </StyledTableRow >
